@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="./style.css">
     <title>Dev.to Scrapper</title>
 </head>
+
 <body>
     <div id="container">
-    <h1>Dev.to Scrapper</h1>
-    <div id="articles">Articles</div>
-    <div id="notes">Notes</div>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="app.js"></script>   
+        <h1>Dev.to Scrapper</h1>
+        <div id="articles">Articles</div>
+        <div id="notes">Notes
+            <textarea id="note"></textarea>
+            <div id="buttons">
+                <div id="action-button">
+                    <button id="make-new">Submit</button>
+                </div>
+                <button id="clear-all">Delete All Notes</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="app.js"></script>
 </body>
+
 </html>
