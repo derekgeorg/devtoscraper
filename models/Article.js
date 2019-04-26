@@ -1,7 +1,9 @@
 var mongoose = require("mongoose");
 
+//create schema object
 var Schema = mongoose.Schema;
 
+//Article schema
 var ArticleSchema = new Schema({
     title: {
         type: String,
@@ -17,6 +19,8 @@ var ArticleSchema = new Schema({
     }
 });
 
+//create Article model
 var Article = mongoose.model("Article", ArticleSchema);
 
+//export
 module.exports = Article;
