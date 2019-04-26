@@ -67,7 +67,7 @@ app.get("/articles", function (req, res) {
 });
 
 //app.get(/savedArticles) - saved articles w/buttons db.article.find res.render
-app.get("/articles/:id", function (req, res) {
+app.get("/saved", function (req, res) {
     db.Article.findOne({ _id: req.params.id })
         .populate("note")
         .then(function (dbArticle) {
