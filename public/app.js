@@ -1,12 +1,19 @@
 //grab articles json
 $.getJSON("/articles", function (data) {
+    console.log(data)
     for (var i = 0; i < data.length; i++) {
-        $("#articles").append("<p results-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+        $("#articles").append(`
+        <div class="card id="articles">
+        <div id="title">${data[i].title}</div>
+        <p id="link>Article link: <a href = "${data[i].link}"> ${data[i].link} </a></p>
+        <button data-id = ${data[i]._id} "btn btn-primary" id="saveButton"> Save Article </button>
+        <button data-id = ${data[i]._id} "btn btn-primary" id="addNote"> Add Note </button>
+        `)
     }
 });
 
 //click add note
-$(document).on("click", "p", function(){
+$(document).on("click", "button", function(){
     $("#notes").empty();
     var thisId = $(this).attr("data-id");
 
@@ -31,7 +38,7 @@ $.ajax({
         //place note body
         $("#bodyinput").val(data.note.body);
     }
-});
+})
 });
 
 // click save note button

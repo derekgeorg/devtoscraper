@@ -1,17 +1,17 @@
 var express = require("express");
 var mongoose = require("mongoose");
-var expressHandlebars = require("express-handlebars");
+var exphbs = require("express-handlebars");
 var logger = require("morgan");
-// var handlebars = require("handlebars");
 var axios = require("axios");
 var cheerio = require("cheerio");
-// var bodyParser = require("bodyparser")
-
-var PORT = process.env.PORT || 3000;
 
 var db = require("./models")
 
+var PORT = process.env.PORT || 3000;
+
 var app = express();
+
+//Middleware
 
 app.use(logger("dev"));
 
@@ -19,28 +19,38 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/devtoscraper", { useNewParser: true });
+// app.engine("handlebars", exphbs({defaultLayout: 'main'}));
+// app.set('view engine', 'handlebars');
+
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/devtoscraper";
+mongoose.connect(MONGODB_URI, { useNewURLParser: true });
+
+console.log("this part is working");
 
 //scrape route
 app.get("/scrape", function (req, res) {
-    axios.get("http://www.dev.to/").then(function (response) {
+    // res.render("home", {scrapedArticle: articles})
+    axios.get("https://dev.to/").then(function (response) {
         var $ = cheerio.load(response.data);
+      
 
-        $("div.content").each(function (i, element) {
+        $("h3").each(function (i, element) {
+            
             var result = {};
 
             //add title
-            result.title = $(this)
-                .children("h3")
-                .text();
+            result.title = $(this).text();
+                
 
-            //add summary
+            //add summary - site has no summary
             // result.summary = $(this)
 
             //add link
             result.link = $(this)
                 .children("a")
                 .attr("href");
+
+            console.log(result);
 
             db.Article.create(result)
                 .then(function (dbArticle) {
@@ -67,18 +77,20 @@ app.get("/articles", function (req, res) {
 });
 
 //app.get(/savedArticles) - saved articles w/buttons db.article.find res.render
-app.get("/saved", function (req, res) {
-    db.Article.findOne({ _id: req.params.id })
-        .populate("note")
-        .then(function (dbArticle) {
-            res.json(dbArticle);
-        })
-        .catch(function (err) {
-            res.json(err);
-        });
+
+app.get("/articles/:id", function(req, res) {
+    db.Article.findOne({_id: req.params.id})
+    .populate("note")
+    .then(function(dbArticle) {
+        res.json(dbArticle);
+    })
+    .catch(function(err) {
+        res.json(err);
+    });
 });
 
 //app.post(/note)
+
 app.post("/articles/:id", function(req, res) {
     db.Note.create(req.body)
     .then(function(dbNote) {
@@ -94,7 +106,6 @@ app.post("/articles/:id", function(req, res) {
 //app.delete("")
 
 //start server
-
 app.listen(PORT, function() {
     console.log("App running on port " + PORT + "!");
 });
